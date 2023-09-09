@@ -139,13 +139,67 @@ body {
   background-color: #ff9900;
 }
 
+/* collapse  */
+.all-list-item-content {
+  margin-bottom: 5px;
+}
+.alllistitem-content-large .accordion:last-child {
+  margin-bottom: 0px;
+}
+.accordion .category-accordion-header {
+  background-color: #ff9900;
+}
+.accordion .food-item-accordion-button {
+  border: 1px solid #ff9900;
+  background-color: #ff9900;
+  color: #fff;
+  font-weight: 500;
+  font-size: 17px;
+  /* padding-bottom: 7px; */
+}
 
+.category-accordionbutton-mobile::after, .food-item-accordion-button::after {
+  filter: invert(1);
+}
+.accordion .food-item-accordion-button:focus {
+  z-index: 3;
+  border-color: #ff9900;
+  outline: 0;
+  box-shadow: none;
+}
 
-
-
-
-
-
+.accordion .accordion-button:not(.collapsed) {
+  color: #ffffff;
+  background-color: #ff9900;
+  box-shadow: 1px 1px 1px none;
+}
+.food-item-image img {
+  width: 100%;
+  border-radius: 5px;
+}
+.product-card {
+  cursor: pointer;
+}
+.food-item-accordion-body .row {
+  border: 1px solid #d3d3d3;
+  border-radius: 5px;
+  padding: 10px 0px;
+  margin-bottom: 8px;
+}
+.food-item-name h3 {
+  font-size: 17px;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+.food-item-price {
+  text-align: start;
+}
+.food-item-price p {
+  color: #181818;
+  font-weight: 500;
+  font-size: 15px;
+  margin-top: 3px;
+}
 @media only screen and (min-width: 600px) {
   .large-device, .header-large-device, .footer-large-device {
     display: none;

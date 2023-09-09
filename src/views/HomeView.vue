@@ -1,6 +1,3 @@
-<script setup>
-</script>
-
 <template>
   <main class="menu-section">
     <div class="menu-overlay"></div>
@@ -24,25 +21,36 @@
           <div class="col-md-8">
             <div class="row">
               <div class="col-md-4">
-                <div class="list-group menu-list">
-                  <div class="menu-title">
-                    <h3>Menu</h3>
-                  </div>
-                  <div class="menu-list-all-item">
-                    <template v-for="category in responseData" :key="category.name">
-                    <a v-for="item in category.subCategories" :key="item.name" class="list-group-item list-group-item-action menu-list-item" href="">
-                      <span>
-                        <svg class="svg-inline--fa fa-caret-right" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" data-fa-i2svg=""><path fill="currentColor" d="M246.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-9.2-9.2-22.9-11.9-34.9-6.9s-19.8 16.6-19.8 29.6l0 256c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l128-128z"></path></svg>
-                      </span>{{ item.name }}
-                    </a>
-                  </template>
-                  </div>
+                <CategoryView />
+              </div>
+              <div class="col-md-8">
+                <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
+                  <template v-for="category in responseData" :key="category.id">
+                  <div v-for="item in category.subCategories" :key="item.id" :id="item.key" class="all-list-item-content alllistitem-content-large">
+                    <div class="accordion" :id="'accordionExample' + item.key">
+                      <div class="accordion-item">
+                        <h2 class="accordion-header category-accordion-header">
+                          <button class="accordion-button food-item-accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#sub'+ item.key" aria-expanded="false" :aria-controls="'sub' + item.key">{{ item.name }}</button>
+                        </h2>
+                        <div :id="'sub'+ item.key" class="accordion-collapse collapse show" :data-bs-parent="'#accordionExample' + item.key" style="">
+                          <div class="accordion-body food-item-accordion-body">
+                              <div class="" v-for="product in filterProductsByCategory(item.key)" :key="product.id">
+                                <ProductCard :product="product" />
+                               
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div> 
+                </template>
                 </div>
               </div>
-              <div class="col-md-8"></div>
             </div>
           </div>
-          <div class="col-md-4"></div>
+          <div class="col-md-4">
+            
+          </div>
         </div>
       </div>
     </div>
@@ -50,19 +58,26 @@
 </template>
 
 <script>
+import CategoryView from '../components/CategoryView.vue';
 import axios from 'axios';
-export default {
+import ProductCard from '../components/ProductCard.vue';
 
+export default {
+  components: {
+    CategoryView,
+    ProductCard,
+},
   data() {
     return {
-      responseData: null, // Initialize as null or an empty array, depending on your data structure
-      error: null, // Initialize as null to handle errors
+      responseData: null, 
+      error: null,
+      products: [],
     };
   },
   created() {
+    //catergory api
   axios.get('https://api-flava.yumaapp.uk/api/category')
       .then((response) => {
-        // Process the response data to create the desired structure
         this.responseData = response.data.map((category) => {
           return {
             id: category.id,
@@ -70,17 +85,33 @@ export default {
             subCategories: category.sub_categories.map((subCategory) => ({
               id: subCategory.id,
               name: subCategory.name,
+              key: subCategory.key,
+              categoryId: subCategory.key,
             })),
           };
         });
-        console.log(this.responseData);
       })
     .catch(error => {
-      // Handle any errors here
+      this.error = error;
+    });
+    //product api
+    axios.get('https://api-flava.yumaapp.uk/api/products')
+    .then((response) => {
+      this.products = response.data;  
+      //console.log(this.products)    
+    })
+    .catch(error => {
       this.error = error;
     });
   },
-}
+  methods: {
+  // filter 
+  filterProductsByCategory(key) {
+    return this.products.filter((product) => product.property.category === key);
+  },
+  
+},
+  }
 </script>
 
 
